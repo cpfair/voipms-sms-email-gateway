@@ -43,20 +43,24 @@ def hook_email():
         "method": "sendSMS",
         "did": VOIPMS_OUTGOING_DID,
         "dst": to_mt,
-        "message": message
+        "message": message,
+        "content_type": "json"
     }
-    res = requests.post("https://voip.ms/api/v1/rest.php", data=post_data)
+    res = requests.get("https://voip.ms/api/v1/rest.php", params=post_data)
     if res.status_code != 200 or res.json()["status"] != "success":
+        print(res.text)
+        return "no"
         send_email("system@%s" % EMAIL_DOMAIN,
                    request.form["sender"],
                    "SMS send failure to %s" % to_mt,
                    "VOIP.ms API returned an error:\n%s" % res.text)
+    return ""
 
 @app.route("/hook/%s/sms" % HOOK_URL_KEY, methods=["GET"])
 def hook_sms():
-    from_mt = request.args["FROM"]
-    message = request.args["MESSAGE"]
-    ts = request.args["TIMESTAMP"]
+    from_mt = request.args["from"]
+    message = request.args["message"]
+    ts = request.args["date"]
     send_email("%s@%s" % (from_mt, EMAIL_DOMAIN),
                APPROVED_SENDERS[0],
                "SMS from %s" % from_mt,
