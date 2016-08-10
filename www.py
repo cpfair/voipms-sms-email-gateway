@@ -40,7 +40,7 @@ def hook_email():
     post_data = {
         "api_username": VOIPMS_EMAIL,
         "api_password": VOIPMS_API_PASSWORD,
-        "method": "sendSms",
+        "method": "sendSMS",
         "did": VOIPMS_OUTGOING_DID,
         "dst": to_mt,
         "message": message
