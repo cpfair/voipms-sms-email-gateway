@@ -19,7 +19,7 @@ def send_email(from_addr, to_addr, subject, body):
         })
     assert res.status_code == 200, "Mailgun send request failed - %d %s" % (res.status_code, res.text)
 
-@app.route("/hook/%s/email/" % HOOK_URL_KEY, methods=["POST"])
+@app.route("/hook/%s/email" % HOOK_URL_KEY, methods=["POST"])
 def hook_email():
     # Top security.
     if request.form["sender"] not in APPROVED_SENDERS:
@@ -52,7 +52,7 @@ def hook_email():
                    "SMS send failure to %s" % to_mt,
                    "VOIP.ms API returned an error:\n%s" % res.text)
 
-@app.route("/hook/%s/sms/" % HOOK_URL_KEY, methods=["GET"])
+@app.route("/hook/%s/sms" % HOOK_URL_KEY, methods=["GET"])
 def hook_sms():
     from_mt = request.args["FROM"]
     message = request.args["MESSAGE"]
